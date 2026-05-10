@@ -2,8 +2,59 @@
 #include <queue>
 #include <vector>
 #include "Patient.h"
+#include "Doctor.h"
+
 
 using namespace std;
+Doctor* insertDoctor(Doctor* root, int id, string name, string specialty) {
+
+    if(root == NULL) {
+
+        return new Doctor(id, name, specialty);
+    }
+
+    if(specialty < root->specialty) {
+
+        root->left = insertDoctor(root->left, id, name, specialty);
+    }
+
+    else {
+
+        root->right = insertDoctor(root->right, id, name, specialty);
+    }
+
+    return root;
+}
+
+void searchSpecialist(Doctor* root, string specialty) {
+
+    if(root == NULL) {
+
+        cout << "Specialist Not Found!\n";
+        return;
+    }
+
+    if(root->specialty == specialty) {
+
+        cout << "\nDoctor Found:\n";
+
+        cout << "Doctor ID: " << root->doctorID << endl;
+        cout << "Doctor Name: " << root->doctorName << endl;
+        cout << "Specialty: " << root->specialty << endl;
+
+        return;
+    }
+
+    if(specialty < root->specialty) {
+
+        searchSpecialist(root->left, specialty);
+    }
+
+    else {
+
+        searchSpecialist(root->right, specialty);
+    }
+}
 
 int main() {
 
@@ -15,6 +66,7 @@ int main() {
     priority_queue<int, vector<int>, greater<int>> emergencyQueue;
 
     int choice;
+    Doctor* root = NULL;
 
     while(true) {
 
@@ -26,7 +78,9 @@ int main() {
         cout << "5. Add Emergency Patient\n";
         cout << "6. Treat Emergency Patient\n";
         cout << "7. Search Patient by ID\n";
-        cout << "8. Exit\n";
+        cout << "8. Add Doctor\n";
+cout << "9. Find Specialist\n";
+cout << "10. Exit\n";
 
         cout << "Enter your choice: ";
         cin >> choice;
@@ -170,11 +224,48 @@ int main() {
 
                 break;
             }
+            case 8: {
 
-            case 8:
+    int doctorID;
+    string doctorName;
+    string specialty;
 
-                cout << "Exiting Program...";
-                return 0;
+    cout << "Enter Doctor ID: ";
+    cin >> doctorID;
+
+    cin.ignore();
+
+    cout << "Enter Doctor Name: ";
+    getline(cin, doctorName);
+
+    cout << "Enter Specialty: ";
+    getline(cin, specialty);
+
+    root = insertDoctor(root, doctorID, doctorName, specialty);
+
+    cout << "Doctor Added Successfully!\n";
+
+    break;
+}
+
+case 9: {
+
+    string searchSpecialty;
+
+    cin.ignore();
+
+    cout << "Enter Specialty to Search: ";
+    getline(cin, searchSpecialty);
+
+    searchSpecialist(root, searchSpecialty);
+
+    break;
+}
+
+case 10:
+
+    cout << "Exiting Program...";
+    return 0;
 
             default:
 
